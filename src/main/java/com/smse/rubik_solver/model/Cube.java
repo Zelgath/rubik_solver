@@ -73,11 +73,9 @@ public class Cube {
     }
 
     private boolean isCubeCompleted() {
-        if (isFaceCompleted(W) && isFaceCompleted(R) && isFaceCompleted(B) && isFaceCompleted(G) && isFaceCompleted(O)
-                && isFaceCompleted(Y)) {
-            return true;
-        }
-        return false;
+        return isFaceCompleted(W) && isFaceCompleted(R) && isFaceCompleted(B) && isFaceCompleted(G)
+                && isFaceCompleted(O)
+                && isFaceCompleted(Y);
     }
 
     private static boolean isFaceCompleted(Color[][] face) {
