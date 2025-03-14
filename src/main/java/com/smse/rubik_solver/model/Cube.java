@@ -1,7 +1,5 @@
 package com.smse.rubik_solver.model;
 
-import org.springframework.stereotype.Component;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +9,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-enum Color {
-    W, R, B, G, O, Y;
-}
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
 public class Cube {
     private Color[][] W = {
             { Color.W, Color.W, Color.W },
