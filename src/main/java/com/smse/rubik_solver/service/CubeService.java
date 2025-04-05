@@ -9,12 +9,13 @@ import com.smse.rubik_solver.model.Cube;
 public class CubeService {
 
     public void initializeCube(Cube cube, CubeDto cubeDto) {
-        cube.setY(cubeDto.getFront());
-        cube.setB(cubeDto.getBack());
-        cube.setG(cubeDto.getBottom());
-        cube.setO(cubeDto.getLeft());
-        cube.setR(cubeDto.getRight());
+        cube.setR(cubeDto.getFront());
         cube.setW(cubeDto.getTop());
+        cube.setG(cubeDto.getLeft());
+        cube.setB(cubeDto.getRight());
+        cube.setY(cubeDto.getBottom());
+        cube.setO(cubeDto.getBack());
+
     }
 
 }
