@@ -27,18 +27,22 @@ public class CubeController {
     private final ValidationService validationService;
 
     @PostMapping("/init")
-    public ResponseEntity<InitResponseDto> initCube(@RequestBody CubeDto cube) {
-        if (!validationService.isCubeValid(cube)) {
+    public ResponseEntity<InitResponseDto> initCube(@RequestBody CubeDto cubeDto) {
+        if (!validationService.isCubeValid(cubeDto)) {
             return ResponseEntity.badRequest().build();
         }
 
         String sessionId = sessionManager.createSession();
         UserSession session = sessionManager.getSession(sessionId);
-        cubeService.initializeCube(session.getCube(), cube);
+
+        Cube cube = new Cube(cubeDto);
+
+        session.setCube(cube);
+        cubeService.initializeCube(cube, cubeDto);
 
         InitResponseDto response = new InitResponseDto();
         response.setSessionId(sessionId);
-        response.setCube(cube);
+        response.setCube(cube.toDto());
 
         return ResponseEntity.ok(response);
     }
@@ -53,5 +57,4 @@ public class CubeController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 }
