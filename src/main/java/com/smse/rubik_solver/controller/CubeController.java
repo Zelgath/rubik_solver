@@ -36,9 +36,10 @@ public class CubeController {
         UserSession session = sessionManager.getSession(sessionId);
         session.setCube(cube);
 
-        InitResponseDto response = new InitResponseDto();
-        response.setSessionId(sessionId);
-        response.setCube(cube);
+        InitResponseDto response = InitResponseDto.builder()
+                .sessionId(sessionId)
+                .cube(cube)
+                .build();
 
         return ResponseEntity.ok(response);
     }
