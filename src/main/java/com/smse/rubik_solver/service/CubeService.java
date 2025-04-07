@@ -8,11 +8,13 @@ import com.smse.rubik_solver.model.Cube;
 public class CubeService {
 
     public Cube initializeCube(Cube cube) {
+        cube.initArrays();
         return cube;
     }
 
     public Cube applyMoves(Cube cube, String[] moves) {
         cube.makeMovesFromList(moves);
+        cube.syncToLists();
         return cube;
     }
 

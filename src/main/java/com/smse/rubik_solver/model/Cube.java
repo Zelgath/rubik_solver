@@ -9,47 +9,73 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cube {
 
-    private Color[][] W = {
-            { Color.W, Color.W, Color.W },
-            { Color.W, Color.W, Color.W },
-            { Color.W, Color.W, Color.W }
-    };
+    private List<List<Color>> up;
+    private List<List<Color>> front;
+    private List<List<Color>> right;
+    private List<List<Color>> left;
+    private List<List<Color>> back;
+    private List<List<Color>> down;
 
-    private Color[][] R = {
-            { Color.R, Color.R, Color.R },
-            { Color.R, Color.R, Color.R },
-            { Color.R, Color.R, Color.R }
-    };
+    @JsonIgnore
+    private Color[][] W;
+    @JsonIgnore
+    private Color[][] R;
+    @JsonIgnore
+    private Color[][] B;
+    @JsonIgnore
+    private Color[][] G;
+    @JsonIgnore
+    private Color[][] O;
+    @JsonIgnore
+    private Color[][] Y;
 
-    private Color[][] B = {
-            { Color.B, Color.B, Color.B },
-            { Color.B, Color.B, Color.B },
-            { Color.B, Color.B, Color.B }
-    };
+    public void initArrays() {
+        this.W = toArray(up);
+        this.R = toArray(front);
+        this.B = toArray(right);
+        this.G = toArray(left);
+        this.O = toArray(back);
+        this.Y = toArray(down);
+    }
 
-    private Color[][] G = {
-            { Color.G, Color.G, Color.G },
-            { Color.G, Color.G, Color.G },
-            { Color.G, Color.G, Color.G }
-    };
+    public static Color[][] toArray(List<List<Color>> list) {
+        Color[][] array = new Color[3][3];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                array[i][j] = list.get(i).get(j);
+            }
+        }
+        return array;
+    }
 
-    private Color[][] O = {
-            { Color.O, Color.O, Color.O },
-            { Color.O, Color.O, Color.O },
-            { Color.O, Color.O, Color.O }
-    };
+    public void syncToLists() {
+        this.up = fromArray(W);
+        this.front = fromArray(R);
+        this.right = fromArray(B);
+        this.left = fromArray(G);
+        this.back = fromArray(O);
+        this.down = fromArray(Y);
+    }
 
-    private Color[][] Y = {
-            { Color.Y, Color.Y, Color.Y },
-            { Color.Y, Color.Y, Color.Y },
-            { Color.Y, Color.Y, Color.Y }
-    };
+    public static List<List<Color>> fromArray(Color[][] array) {
+        List<List<Color>> list = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            List<Color> row = new ArrayList<>();
+            for (int j = 0; j < 3; j++) {
+                row.add(array[i][j]);
+            }
+            list.add(row);
+        }
+        return list;
+    }
 
     private void printCube() {
         System.out.println("Up");
