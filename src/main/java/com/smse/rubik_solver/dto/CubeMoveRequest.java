@@ -1,9 +1,11 @@
 package com.smse.rubik_solver.dto;
 
+import com.smse.rubik_solver.model.Cube;
+
 import lombok.Data;
 
 @Data
 public class CubeMoveRequest {
-    private CubeDto cube;
+    private Cube cube;
     private String[] moves;
 }

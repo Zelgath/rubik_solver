@@ -9,32 +9,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.smse.rubik_solver.dto.CubeDto;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cube {
-    public Cube(CubeDto dto) {
-        this.R = dto.getFront();
-        this.W = dto.getTop();
-        this.G = dto.getLeft();
-        this.B = dto.getRight();
-        this.Y = dto.getBottom();
-        this.O = dto.getBack();
-    }
-
-    public CubeDto toDto() {
-        CubeDto dto = new CubeDto();
-        dto.setFront(this.R);
-        dto.setTop(this.W);
-        dto.setLeft(this.G);
-        dto.setRight(this.B);
-        dto.setBottom(this.Y);
-        dto.setBack(this.O);
-        return dto;
-    }
 
     private Color[][] W = {
             { Color.W, Color.W, Color.W },
