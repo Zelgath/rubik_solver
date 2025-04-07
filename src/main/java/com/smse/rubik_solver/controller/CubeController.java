@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smse.rubik_solver.dto.CubeMoveRequest;
+import com.smse.rubik_solver.dto.CubeScrambleRequest;
 import com.smse.rubik_solver.dto.InitResponseDto;
 import com.smse.rubik_solver.model.Cube;
 import com.smse.rubik_solver.model.UserSession;
@@ -49,6 +50,17 @@ public class CubeController {
         try {
             Cube cube = cubeService.initializeCube(request.getCube());
             cubeService.applyMoves(cube, request.getMoves());
+            return ResponseEntity.ok(cube);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/scramble")
+    public ResponseEntity<Cube> scramble(@RequestBody CubeScrambleRequest request) {
+        try {
+            Cube cube = cubeService.initializeCube(request.getCube());
+            cubeService.getRandomScramble(cube, request.getN());
             return ResponseEntity.ok(cube);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

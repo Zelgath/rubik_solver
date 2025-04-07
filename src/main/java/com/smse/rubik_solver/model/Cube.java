@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -91,6 +92,15 @@ public class Cube {
         System.out.println("Back");
         printFace(O);
     }
+
+    private static final String[] MOVES = {
+            "U", "U'",
+            "D", "D'",
+            "L", "L'",
+            "R", "R'",
+            "F", "F'",
+            "B", "B'"
+    };
 
     private boolean isCubeCompleted() {
         return isFaceCompleted(W) && isFaceCompleted(R) && isFaceCompleted(B) && isFaceCompleted(G)
@@ -509,12 +519,13 @@ public class Cube {
         return count;
     }
 
-    public void makeMovesFromList(String[] moves) {
-        if (moves.length == 0) {
+    public void makeMovesFromList(List<String> moves) {
+        if (moves == null || moves.isEmpty()) {
             return;
         }
-        for (int i = 0; i < moves.length; i++) {
-            switch (moves[i]) {
+
+        for (String move : moves) {
+            switch (move) {
                 case "R":
                     moveR();
                     break;
@@ -552,9 +563,25 @@ public class Cube {
                     moveBprim();
                     break;
                 default:
-                    System.out.println("Unknown move: " + moves[i]);
+                    System.out.println("Unknown move: " + move);
             }
         }
+    }
+
+    private static List<String> getRandomMoves(int n) {
+        Random random = new Random();
+        List<String> randomMoves = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String move = MOVES[random.nextInt(MOVES.length)];
+            randomMoves.add(move);
+        }
+
+        return randomMoves;
+    }
+
+    public void randomScramble(int n) {
+        makeMovesFromList(getRandomMoves(n));
     }
 
 }
