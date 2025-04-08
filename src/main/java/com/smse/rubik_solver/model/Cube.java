@@ -78,6 +78,18 @@ public class Cube {
         return list;
     }
 
+    public List<List<Color>> makeCompletedFace(Color color) {
+        List<List<Color>> face = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            List<Color> row = new ArrayList<>();
+            for (int j = 0; j < 3; j++) {
+                row.add(color);
+            }
+            face.add(row);
+        }
+        return face;
+    }
+
     private void printCube() {
         System.out.println("Up");
         printFace(W);
