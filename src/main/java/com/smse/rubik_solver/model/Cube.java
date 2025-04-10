@@ -313,7 +313,7 @@ public class Cube {
         }
     }
 
-    private void moveD() {
+    void moveD() {
         rotateClockWise(Y);
         Color[] temp = new Color[3];
         for (int i = 0; i < 3; i++) {
@@ -333,7 +333,7 @@ public class Cube {
         }
     }
 
-    private void moveDprim() {
+    void moveDprim() {
         rotateAntiClockWise(Y);
         Color[] temp = new Color[3];
         for (int i = 0; i < 3; i++) {
@@ -398,115 +398,6 @@ public class Cube {
         moveU();
         moveRprim();
         moveUprim();
-    }
-
-    private String[] solveCrossOnLastLayer() {
-        Color center = Y[1][1];
-        String state = "" + (Y[0][1] == center ? "U" : "") + (Y[1][0] == center ? "L" : "") +
-                (Y[1][2] == center ? "R" : "") + (Y[2][1] == center ? "D" : "");
-
-        switch (state) {
-            case "":
-                return new String[] { "F", "L", "D", "L'", "D'", "F'", "B", "R", "D", "R'", "D'", "R", "D", "R'", "D'",
-                        "B'" };
-            case "UL":
-                return new String[] { "B", "R", "D", "R'", "D'", "R", "D", "R'", "D'", "B'" };
-            case "UR":
-                return new String[] { "L", "B", "U", "B'", "U'", "B", "U", "B'", "U'", "L'" };
-            case "LD":
-                return new String[] { "R", "F", "D", "F'", "D'", "F", "D", "F'", "D'", "R'" };
-            case "RD":
-                return new String[] { "F", "L", "D", "L'", "D'", "L", "D", "L'", "D'", "F'" };
-            case "UD":
-                return new String[] { "L", "B", "D", "B'", "D'", "L'" };
-            case "LR":
-                return new String[] { "F", "L", "D", "L'", "D'", "F'" };
-            default:
-                return null;
-        }
-    }
-
-    private String[] solveLastLayerPart2() {
-        List<String> moves = new ArrayList<>();
-        int count = howManyStickersInPlaceForPart2();
-        int c = 0;
-
-        while (count < 2) {
-            moveD();
-            c++;
-            moves.add("D");
-            count = howManyStickersInPlaceForPart2();
-        }
-
-        Color frontSticker = R[2][1];
-        Color frontCenter = R[1][1];
-        Color rightSticker = B[2][1];
-        Color rightCenter = B[1][1];
-        Color leftSticker = G[2][1];
-        Color leftCenter = G[1][1];
-        Color backSticker = O[2][1];
-        Color backCenter = O[1][1];
-        String state = "" + (frontSticker == frontCenter ? "F" : "") + (rightSticker == rightCenter ? "R" : "") +
-                (leftSticker == leftCenter ? "L" : "") + (backSticker == backCenter ? "B" : "");
-
-        for (int i = 0; i < c; i++) {
-            moveDprim();
-        }
-
-        String[] additionalMoves;
-        switch (state) {
-            case ("RB"):
-                additionalMoves = new String[] { "D'", "B", "D'", "D'", "B'", "D'", "B", "D'", "B'" };
-                break;
-            case ("FR"):
-                additionalMoves = new String[] { "D'", "R", "D'", "D'", "R'", "D'", "R", "D'", "R'" };
-                break;
-            case ("LB"):
-                additionalMoves = new String[] { "D'", "L", "D'", "D'", "L'", "D'", "L", "D'", "L'" };
-                break;
-            case ("FL"):
-                additionalMoves = new String[] { "D'", "F", "D'", "D'", "F'", "D'", "F", "D'", "F'" };
-                break;
-            case ("RL"):
-                additionalMoves = new String[] { "D'", "L", "D'", "D'", "L'", "D'", "L", "D'", "L'", "B", "D'",
-                        "D'", "B'", "D'", "B", "D'", "B'" };
-                break;
-            case ("FB"):
-                additionalMoves = new String[] { "D'", "B", "D'", "D'", "B'", "D'", "B", "D'", "B'", "R", "D'",
-                        "D'", "R'", "D'", "R", "D'", "R'" };
-                break;
-            default:
-                additionalMoves = new String[] {};
-        }
-
-        moves.addAll(Arrays.asList(additionalMoves));
-
-        return moves.toArray(new String[0]);
-    }
-
-    private int howManyStickersInPlaceForPart2() {
-        int count = 0;
-        Color frontSticker = R[2][1];
-        Color frontCenter = R[1][1];
-        Color rightSticker = B[2][1];
-        Color rightCenter = B[1][1];
-        Color leftSticker = G[2][1];
-        Color leftCenter = G[1][1];
-        Color backSticker = O[2][1];
-        Color backCenter = O[1][1];
-        if (frontSticker == frontCenter) {
-            count++;
-        }
-        if (rightSticker == rightCenter) {
-            count++;
-        }
-        if (leftSticker == leftCenter) {
-            count++;
-        }
-        if (backSticker == backCenter) {
-            count++;
-        }
-        return count;
     }
 
     public void makeMovesFromList(String[] moves) {
