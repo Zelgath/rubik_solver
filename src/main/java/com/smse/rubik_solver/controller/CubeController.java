@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.smse.rubik_solver.dto.CubeMoveRequest;
 import com.smse.rubik_solver.dto.CubeScrambleRequest;
 import com.smse.rubik_solver.dto.InitResponseDto;
-import com.smse.rubik_solver.dto.RandomCubeRequest;
 import com.smse.rubik_solver.model.Cube;
 import com.smse.rubik_solver.model.UserSession;
 import com.smse.rubik_solver.service.CubeService;
@@ -15,6 +14,7 @@ import com.smse.rubik_solver.service.ValidationService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -68,8 +68,8 @@ public class CubeController {
         }
     }
 
-    @PostMapping("/random")
-    public ResponseEntity<Cube> random(@RequestBody RandomCubeRequest request) {
+    @GetMapping("/random")
+    public ResponseEntity<Cube> random() {
         try {
             Cube cube = cubeService.createSolvedCube();
             cubeService.getRandomScramble(cube, 20);
@@ -78,4 +78,5 @@ public class CubeController {
             return ResponseEntity.badRequest().build();
         }
     }
+
 }
