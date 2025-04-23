@@ -37,6 +37,13 @@ public class CubeController {
         return ResponseEntity.ok(response);
     }
 
+    private ResponseEntity<InitResponseDto> saveAndRespond(Cube cube, String sessionId) {
+        sessionId = getOrCreateSessionId(sessionId);
+        UserSession session = sessionManager.getSession(sessionId);
+        session.setCube(cube);
+        return buildResponse(cube, sessionId);
+    }
+
     @PostMapping("/init")
     public ResponseEntity<InitResponseDto> initCube(
             @RequestBody Cube c,
@@ -47,11 +54,7 @@ public class CubeController {
                 return ResponseEntity.badRequest().build();
             }
 
-            sessionId = getOrCreateSessionId(sessionId);
-            UserSession session = sessionManager.getSession(sessionId);
-            session.setCube(cube);
-
-            return buildResponse(cube, sessionId);
+            return saveAndRespond(cube, sessionId);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -62,15 +65,18 @@ public class CubeController {
             @RequestBody CubeMoveRequest request,
             @RequestParam(required = false) String sessionId) {
         try {
-            sessionId = getOrCreateSessionId(sessionId);
-            UserSession session = sessionManager.getSession(sessionId);
-
             Cube cube = cubeService.initializeCube(request.getCube());
+            if (!validationService.isCubeValid(cube)) {
+                return ResponseEntity.badRequest().build();
+            }
 
             cubeService.applyMoves(cube, request.getMoves());
-            session.setCube(cube);
 
-            return buildResponse(cube, sessionId);
+            if (!validationService.isCubeValid(cube)) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+
+            return saveAndRespond(cube, sessionId);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -81,14 +87,18 @@ public class CubeController {
             @RequestBody CubeScrambleRequest request,
             @RequestParam(required = false) String sessionId) {
         try {
-            sessionId = getOrCreateSessionId(sessionId);
-            UserSession session = sessionManager.getSession(sessionId);
-
             Cube cube = cubeService.initializeCube(request.getCube());
-            cubeService.getRandomScramble(cube, request.getN());
-            session.setCube(cube);
+            if (!validationService.isCubeValid(cube)) {
+                return ResponseEntity.badRequest().build();
+            }
 
-            return buildResponse(cube, sessionId);
+            cubeService.getRandomScramble(cube, request.getN());
+
+            if (!validationService.isCubeValid(cube)) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+
+            return saveAndRespond(cube, sessionId);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -97,14 +107,14 @@ public class CubeController {
     @PostMapping("/random")
     public ResponseEntity<InitResponseDto> random(@RequestParam(required = false) String sessionId) {
         try {
-            sessionId = getOrCreateSessionId(sessionId);
-            UserSession session = sessionManager.getSession(sessionId);
-
             Cube cube = cubeService.createSolvedCube();
             cubeService.getRandomScramble(cube, 20);
-            session.setCube(cube);
 
-            return buildResponse(cube, sessionId);
+            if (!validationService.isCubeValid(cube)) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+
+            return saveAndRespond(cube, sessionId);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
