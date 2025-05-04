@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.smse.rubik_solver.model.Color;
 import com.smse.rubik_solver.model.Cube;
+import com.smse.rubik_solver.model.CubeSolver;
 
 @Service
 public class CubeService {
@@ -13,6 +14,12 @@ public class CubeService {
     public Cube initializeCube(Cube cube) {
         cube.initArrays();
         return cube;
+    }
+
+    public List<String> solve(Cube cube) {
+        CubeSolver solver = new CubeSolver();
+
+        return solver.solveLastLayer(cube);
     }
 
     public Cube applyMoves(Cube cube, List<String> moves) {
