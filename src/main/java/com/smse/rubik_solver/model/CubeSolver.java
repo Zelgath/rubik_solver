@@ -43,7 +43,7 @@ public class CubeSolver {
                 moves = Arrays.asList("B", "R", "D", "R'", "D'", "R", "D", "R'", "D'", "B'");
                 break;
             case "UR":
-                moves = Arrays.asList("L", "B", "U", "B'", "U'", "B", "U", "B'", "U'", "L'");
+                moves = Arrays.asList("L", "B", "D", "B'", "D'", "B", "D", "B'", "D'", "L'");
                 break;
             case "LD":
                 moves = Arrays.asList("R", "F", "D", "F'", "D'", "F", "D", "F'", "D'", "R'");
