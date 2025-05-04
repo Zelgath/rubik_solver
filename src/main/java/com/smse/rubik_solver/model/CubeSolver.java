@@ -21,7 +21,50 @@ public class CubeSolver {
         allMoves.addAll(rotateEdges(cube));
         cube.syncToLists();
 
-        return allMoves;
+        return optimizeMoves(allMoves);
+
+    }
+
+    private List<String> optimizeMoves(List<String> moves) {
+        Stack<String> stack = new Stack<>();
+
+        for (String move : moves) {
+            if (!stack.isEmpty()) {
+                String top = stack.peek();
+                if (isInverse(top, move)) {
+                    stack.pop(); // Cancel inverse moves
+                } else if (top.equals(move)) {
+                    stack.pop();
+                    if (!stack.isEmpty() && stack.peek().equals(move)) {
+                        // Three same moves -> cancel all three and add inverse
+                        stack.pop();
+                        stack.push(getInverse(move));
+                    } else {
+                        // Two same moves -> store them temporarily
+                        stack.push(move);
+                        stack.push(move);
+                    }
+                } else {
+                    stack.push(move);
+                }
+            } else {
+                stack.push(move);
+            }
+        }
+
+        return new ArrayList<>(stack);
+    }
+
+    private boolean isInverse(String move1, String move2) {
+        return move1.equals(getInverse(move2));
+    }
+
+    private String getInverse(String move) {
+        if (move.endsWith("'")) {
+            return move.substring(0, move.length() - 1);
+        } else {
+            return move + "'";
+        }
     }
 
     private List<String> solveCrossOnLastLayer(Cube cube) {
