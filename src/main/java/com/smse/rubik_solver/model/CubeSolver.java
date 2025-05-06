@@ -245,6 +245,79 @@ public class CubeSolver {
         return moves;
     }
 
+    private List<String> solveMiddleLayer(Cube cube) {
+        List<String> additionalMoves = new ArrayList<>();
+
+        Set<Color> br = Set.of(Color.B, Color.R);
+        Set<Color> bo = Set.of(Color.B, Color.O);
+        Set<Color> gr = Set.of(Color.G, Color.R);
+        Set<Color> go = Set.of(Color.G, Color.O);
+
+        Set<Color> r = Set.of(cube.getR()[2][1], cube.getY()[0][1]);
+        Set<Color> b = Set.of(cube.getB()[2][1], cube.getY()[1][2]);
+        Set<Color> g = Set.of(cube.getG()[2][1], cube.getY()[1][0]);
+        Set<Color> o = Set.of(cube.getO()[2][1], cube.getY()[2][1]);
+
+        if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.R)) {
+            if (r.equals(br)) {
+                additionalMoves = Arrays.asList("D'", "R'", "D", "R", "D", "F", "D'", "F'");
+            } else if (r.equals(gr)) {
+                additionalMoves = Arrays.asList("D", "L", "D'", "L'", "D'", "F'", "D", "F");
+            }
+        }
+
+        if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.B)) {
+            if (b.equals(bo)) {
+                additionalMoves = Arrays.asList("D'", "B'", "D", "B", "D", "R", "D'", "R'");
+            } else if (b.equals(br)) {
+                additionalMoves = Arrays.asList("D", "F", "D'", "F'", "D'", "R'", "D", "R");
+            }
+        }
+
+        if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.G)) {
+            if (g.equals(gr)) {
+                additionalMoves = Arrays.asList("D'", "F'", "D", "F", "D", "L", "D'", "L'");
+            } else if (g.equals(go)) {
+                additionalMoves = Arrays.asList("D", "B", "D'", "B'", "D'", "L'", "D", "L");
+            }
+        }
+
+        if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.O)) {
+            if (o.equals(go)) {
+                additionalMoves = Arrays.asList("D'", "L'", "D", "L", "D", "B", "D'", "B'");
+            } else if (o.equals(bo)) {
+                additionalMoves = Arrays.asList("D", "R", "D'", "R'", "D'", "B'", "D", "B");
+            }
+        }
+
+        return additionalMoves;
+    }
+
+    private boolean isEdgeOnCorrectPlaceForAlgForMiddleLayer(Cube cube, Color color) {
+        Set<Color> br = Set.of(Color.B, Color.R);
+        Set<Color> bo = Set.of(Color.B, Color.O);
+        Set<Color> gr = Set.of(Color.G, Color.R);
+        Set<Color> go = Set.of(Color.B, Color.O);
+
+        Set<Color> r = Set.of(cube.getR()[2][1], cube.getY()[0][1]);
+        Set<Color> b = Set.of(cube.getB()[2][1], cube.getY()[1][2]);
+        Set<Color> g = Set.of(cube.getG()[2][1], cube.getY()[1][0]);
+        Set<Color> o = Set.of(cube.getO()[2][1], cube.getY()[2][1]);
+        if (color.equals(Color.R) && ((r.equals(br) || r.equals(gr)) && cube.getR()[2][1].equals(Color.R))) {
+            return true;
+        }
+        if (color.equals(Color.B) && ((b.equals(br) || b.equals(bo)) && cube.getB()[2][1].equals(Color.B))) {
+            return true;
+        }
+        if (color.equals(Color.G) && ((g.equals(gr) || g.equals(go)) && cube.getG()[2][1].equals(Color.G))) {
+            return true;
+        }
+        if (color.equals(Color.O) && ((o.equals(bo) || o.equals(go)) && cube.getO()[2][1].equals(Color.O))) {
+            return true;
+        }
+        return false;
+    }
+
     private List<String> whichCornersAreInPlace(Cube cube) {
         List<String> correctCorners = new ArrayList<>();
 
