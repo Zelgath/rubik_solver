@@ -245,52 +245,104 @@ public class CubeSolver {
         return moves;
     }
 
-    private List<String> solveMiddleLayer(Cube cube) {
-        List<String> additionalMoves = new ArrayList<>();
+    public List<String> solveMiddleLayer(Cube cube) {
+        List<String> moves = new ArrayList<>();
 
         Set<Color> br = Set.of(Color.B, Color.R);
         Set<Color> bo = Set.of(Color.B, Color.O);
         Set<Color> gr = Set.of(Color.G, Color.R);
         Set<Color> go = Set.of(Color.G, Color.O);
 
-        Set<Color> r = Set.of(cube.getR()[2][1], cube.getY()[0][1]);
-        Set<Color> b = Set.of(cube.getB()[2][1], cube.getY()[1][2]);
-        Set<Color> g = Set.of(cube.getG()[2][1], cube.getY()[1][0]);
-        Set<Color> o = Set.of(cube.getO()[2][1], cube.getY()[2][1]);
+        while (!isMiddleLayerSolved(cube)) {
+            boolean moved = false;
 
-        if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.R)) {
-            if (r.equals(br)) {
-                additionalMoves = Arrays.asList("D'", "R'", "D", "R", "D", "F", "D'", "F'");
-            } else if (r.equals(gr)) {
-                additionalMoves = Arrays.asList("D", "L", "D'", "L'", "D'", "F'", "D", "F");
+            Set<Color> r = Set.of(cube.getR()[2][1], cube.getY()[0][1]);
+            if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.R)) {
+                if (r.equals(br)) {
+                    List<String> additional = Arrays.asList("D'", "R'", "D", "R", "D", "F", "D'", "F'");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    moved = true;
+                } else if (r.equals(gr)) {
+                    List<String> additional = Arrays.asList("D", "L", "D'", "L'", "D'", "F'", "D", "F");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    moved = true;
+                }
+            }
+
+            Set<Color> b = Set.of(cube.getB()[2][1], cube.getY()[1][2]);
+            if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.B)) {
+                if (b.equals(bo)) {
+                    List<String> additional = Arrays.asList("D'", "B'", "D", "B", "D", "R", "D'", "R'");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    moved = true;
+                } else if (b.equals(br)) {
+                    List<String> additional = Arrays.asList("D", "F", "D'", "F'", "D'", "R'", "D", "R");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    moved = true;
+                }
+            }
+
+            Set<Color> g = Set.of(cube.getG()[2][1], cube.getY()[1][0]);
+            if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.G)) {
+                if (g.equals(gr)) {
+                    List<String> additional = Arrays.asList("D'", "F'", "D", "F", "D", "L", "D'", "L'");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    moved = true;
+                } else if (g.equals(go)) {
+                    List<String> additional = Arrays.asList("D", "B", "D'", "B'", "D'", "L'", "D", "L");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    moved = true;
+                }
+            }
+
+            Set<Color> o = Set.of(cube.getO()[2][1], cube.getY()[2][1]);
+            if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.O)) {
+                if (o.equals(go)) {
+                    List<String> additional = Arrays.asList("D'", "L'", "D", "L", "D", "B", "D'", "B'");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    moved = true;
+                } else if (o.equals(bo)) {
+                    List<String> additional = Arrays.asList("D", "R", "D'", "R'", "D'", "B'", "D", "B");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    moved = true;
+                }
+            }
+
+            if (!moved) {
+                moves.add("D");
+                cube.moveD();
             }
         }
 
-        if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.B)) {
-            if (b.equals(bo)) {
-                additionalMoves = Arrays.asList("D'", "B'", "D", "B", "D", "R", "D'", "R'");
-            } else if (b.equals(br)) {
-                additionalMoves = Arrays.asList("D", "F", "D'", "F'", "D'", "R'", "D", "R");
-            }
-        }
+        return moves;
+    }
 
-        if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.G)) {
-            if (g.equals(gr)) {
-                additionalMoves = Arrays.asList("D'", "F'", "D", "F", "D", "L", "D'", "L'");
-            } else if (g.equals(go)) {
-                additionalMoves = Arrays.asList("D", "B", "D'", "B'", "D'", "L'", "D", "L");
-            }
-        }
+    private boolean isMiddleLayerSolved(Cube cube) {
+        // BR
+        if (!(cube.getB()[1][0] == Color.B && cube.getR()[1][2] == Color.R))
+            return false;
 
-        if (isEdgeOnCorrectPlaceForAlgForMiddleLayer(cube, Color.O)) {
-            if (o.equals(go)) {
-                additionalMoves = Arrays.asList("D'", "L'", "D", "L", "D", "B", "D'", "B'");
-            } else if (o.equals(bo)) {
-                additionalMoves = Arrays.asList("D", "R", "D'", "R'", "D'", "B'", "D", "B");
-            }
-        }
+        // BO
+        if (!(cube.getB()[1][2] == Color.B && cube.getO()[1][0] == Color.O))
+            return false;
 
-        return additionalMoves;
+        // GR
+        if (!(cube.getG()[1][2] == Color.G && cube.getR()[1][0] == Color.R))
+            return false;
+
+        // GO
+        if (!(cube.getG()[1][0] == Color.G && cube.getO()[1][2] == Color.O))
+            return false;
+
+        return true;
     }
 
     private boolean isEdgeOnCorrectPlaceForAlgForMiddleLayer(Cube cube, Color color) {
