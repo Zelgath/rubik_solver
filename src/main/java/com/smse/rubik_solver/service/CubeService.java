@@ -19,7 +19,7 @@ public class CubeService {
     public List<String> solve(Cube cube) {
         CubeSolver solver = new CubeSolver();
 
-        return solver.solveLastLayer(cube);
+        return solver.solveCube(cube);
     }
 
     public Cube applyMoves(Cube cube, List<String> moves) {

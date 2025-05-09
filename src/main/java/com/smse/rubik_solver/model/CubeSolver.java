@@ -4,6 +4,19 @@ import java.util.*;
 
 public class CubeSolver {
 
+    public List<String> solveCube(Cube cube) {
+        cube.initArrays();
+
+        List<String> allMoves = new ArrayList<>();
+
+        allMoves.addAll(solveMiddleLayer(cube));
+        cube.syncToLists();
+
+        allMoves.addAll(solveLastLayer(cube));
+        cube.syncToLists();
+        return optimizeMoves(allMoves);
+    }
+
     public List<String> solveLastLayer(Cube cube) {
         cube.initArrays();
 
@@ -19,6 +32,21 @@ public class CubeSolver {
         cube.syncToLists();
 
         allMoves.addAll(rotateEdges(cube));
+        cube.syncToLists();
+
+        return optimizeMoves(allMoves);
+
+    }
+
+    public List<String> solveMiddleLayer(Cube cube) {
+        cube.initArrays();
+
+        List<String> allMoves = new ArrayList<>();
+
+        allMoves.addAll(prepareForSolvingMiddleLayer(cube));
+        cube.syncToLists();
+
+        allMoves.addAll(solveMiddleLayer1(cube));
         cube.syncToLists();
 
         return optimizeMoves(allMoves);
@@ -245,7 +273,7 @@ public class CubeSolver {
         return moves;
     }
 
-    public List<String> solveMiddleLayer(Cube cube) {
+    private List<String> solveMiddleLayer1(Cube cube) {
         List<String> moves = new ArrayList<>();
 
         Set<Color> br = Set.of(Color.B, Color.R);
@@ -338,6 +366,109 @@ public class CubeSolver {
         return moves;
     }
 
+    private List<String> prepareForSolvingMiddleLayer(Cube cube) {
+        List<String> moves = new ArrayList<>();
+
+        while (!isMiddleLayerReadyForSolving(cube)) {
+            boolean moved = false;
+            if (!((cube.getB()[1][0] == Color.B && cube.getR()[1][2] == Color.R)
+                    || (cube.getB()[1][0] == Color.Y || cube.getR()[1][2] == Color.Y))) {
+                if (isEdgeOnCorrectPlaceForPreparingForMiddleLayer(cube, Color.R)) {
+                    List<String> additional = Arrays.asList("D'", "R'", "D", "R", "D", "F", "D'", "F'");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    cube.syncToLists();
+                    moved = true;
+                } else if (isEdgeOnCorrectPlaceForPreparingForMiddleLayer(cube, Color.B)) {
+                    List<String> additional = Arrays.asList("D", "F", "D'", "F'", "D'", "R'", "D", "R");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    cube.syncToLists();
+                    moved = true;
+                }
+            }
+            if (!((cube.getB()[1][2] == Color.B && cube.getO()[1][0] == Color.O)
+                    || (cube.getB()[1][2] == Color.Y || cube.getO()[1][0] == Color.Y))) {
+                if (isEdgeOnCorrectPlaceForPreparingForMiddleLayer(cube, Color.B)) {
+                    List<String> additional = Arrays.asList("D'", "B'", "D", "B", "D", "R", "D'", "R'");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    cube.syncToLists();
+                    moved = true;
+                } else if (isEdgeOnCorrectPlaceForPreparingForMiddleLayer(cube, Color.O)) {
+                    List<String> additional = Arrays.asList("D", "R", "D'", "R'", "D'", "B'", "D", "B");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    cube.syncToLists();
+                    moved = true;
+                }
+            }
+            if (!((cube.getO()[1][2] == Color.O && cube.getG()[1][0] == Color.G)
+                    || (cube.getO()[1][2] == Color.Y || cube.getG()[1][0] == Color.Y))) {
+                if (isEdgeOnCorrectPlaceForPreparingForMiddleLayer(cube, Color.O)) {
+                    List<String> additional = Arrays.asList("D'", "L'", "D", "L", "D", "B", "D'", "B'");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    cube.syncToLists();
+                    moved = true;
+                } else if (isEdgeOnCorrectPlaceForPreparingForMiddleLayer(cube, Color.G)) {
+                    List<String> additional = Arrays.asList("D", "B", "D'", "B'", "D'", "L'", "D", "L");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    cube.syncToLists();
+                    moved = true;
+                }
+            }
+            if (!((cube.getR()[1][0] == Color.R && cube.getG()[1][2] == Color.G)
+                    || (cube.getR()[1][0] == Color.Y || cube.getG()[1][2] == Color.Y))) {
+                if (isEdgeOnCorrectPlaceForPreparingForMiddleLayer(cube, Color.R)) {
+                    List<String> additional = Arrays.asList("D", "L", "D'", "L'", "D'", "F'", "D", "F");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    cube.syncToLists();
+                    moved = true;
+                } else if (isEdgeOnCorrectPlaceForPreparingForMiddleLayer(cube, Color.G)) {
+                    List<String> additional = Arrays.asList("D'", "F'", "D", "F", "D", "L", "D'", "L'");
+                    moves.addAll(additional);
+                    cube.makeMovesFromList(additional);
+                    cube.syncToLists();
+                    moved = true;
+                }
+            }
+            if (!moved) {
+                moves.add("D");
+                cube.moveD();
+                cube.syncToLists();
+            }
+        }
+        return moves;
+
+    }
+
+    private boolean isMiddleLayerReadyForSolving(Cube cube) {
+        // BR
+        if (!((cube.getB()[1][0] == Color.B && cube.getR()[1][2] == Color.R)
+                || (cube.getB()[1][0] == Color.Y || cube.getR()[1][2] == Color.Y)))
+            return false;
+
+        // BO
+        if (!((cube.getB()[1][2] == Color.B && cube.getO()[1][0] == Color.O)
+                || (cube.getB()[1][2] == Color.Y || cube.getO()[1][0] == Color.Y)))
+            return false;
+
+        // GR
+        if (!((cube.getG()[1][2] == Color.G && cube.getR()[1][0] == Color.R)
+                || (cube.getG()[1][2] == Color.Y || cube.getR()[1][0] == Color.Y)))
+            return false;
+
+        // GO
+        if (!((cube.getG()[1][0] == Color.G && cube.getO()[1][2] == Color.O)
+                || (cube.getG()[1][0] == Color.Y || cube.getO()[1][2] == Color.Y)))
+            return false;
+
+        return true;
+    }
+
     private boolean isMiddleLayerSolved(Cube cube) {
         // BR
         if (!(cube.getB()[1][0] == Color.B && cube.getR()[1][2] == Color.R))
@@ -378,6 +509,27 @@ public class CubeSolver {
             return true;
         }
         if (color.equals(Color.O) && ((o.equals(bo) || o.equals(go)) && cube.getO()[2][1].equals(Color.O))) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isEdgeOnCorrectPlaceForPreparingForMiddleLayer(Cube cube, Color color) {
+
+        Set<Color> r = Set.of(cube.getR()[2][1], cube.getY()[0][1]);
+        Set<Color> b = Set.of(cube.getB()[2][1], cube.getY()[1][2]);
+        Set<Color> g = Set.of(cube.getG()[2][1], cube.getY()[1][0]);
+        Set<Color> o = Set.of(cube.getO()[2][1], cube.getY()[2][1]);
+        if (color.equals(Color.R) && (r.contains(Color.Y))) {
+            return true;
+        }
+        if (color.equals(Color.B) && (b.contains(Color.Y))) {
+            return true;
+        }
+        if (color.equals(Color.G) && (g.contains(Color.Y))) {
+            return true;
+        }
+        if (color.equals(Color.O) && (o.contains(Color.O))) {
             return true;
         }
         return false;
