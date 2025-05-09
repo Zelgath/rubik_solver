@@ -262,11 +262,14 @@ public class CubeSolver {
                     List<String> additional = Arrays.asList("D'", "R'", "D", "R", "D", "F", "D'", "F'");
                     moves.addAll(additional);
                     cube.makeMovesFromList(additional);
+                    cube.syncToLists();
                     moved = true;
-                } else if (r.equals(gr)) {
+                }
+                if (r.equals(gr)) {
                     List<String> additional = Arrays.asList("D", "L", "D'", "L'", "D'", "F'", "D", "F");
                     moves.addAll(additional);
                     cube.makeMovesFromList(additional);
+                    cube.syncToLists();
                     moved = true;
                 }
             }
@@ -277,11 +280,14 @@ public class CubeSolver {
                     List<String> additional = Arrays.asList("D'", "B'", "D", "B", "D", "R", "D'", "R'");
                     moves.addAll(additional);
                     cube.makeMovesFromList(additional);
+                    cube.syncToLists();
                     moved = true;
-                } else if (b.equals(br)) {
+                }
+                if (b.equals(br)) {
                     List<String> additional = Arrays.asList("D", "F", "D'", "F'", "D'", "R'", "D", "R");
                     moves.addAll(additional);
                     cube.makeMovesFromList(additional);
+                    cube.syncToLists();
                     moved = true;
                 }
             }
@@ -292,11 +298,14 @@ public class CubeSolver {
                     List<String> additional = Arrays.asList("D'", "F'", "D", "F", "D", "L", "D'", "L'");
                     moves.addAll(additional);
                     cube.makeMovesFromList(additional);
+                    cube.syncToLists();
                     moved = true;
-                } else if (g.equals(go)) {
+                }
+                if (g.equals(go)) {
                     List<String> additional = Arrays.asList("D", "B", "D'", "B'", "D'", "L'", "D", "L");
                     moves.addAll(additional);
                     cube.makeMovesFromList(additional);
+                    cube.syncToLists();
                     moved = true;
                 }
             }
@@ -307,11 +316,14 @@ public class CubeSolver {
                     List<String> additional = Arrays.asList("D'", "L'", "D", "L", "D", "B", "D'", "B'");
                     moves.addAll(additional);
                     cube.makeMovesFromList(additional);
+                    cube.syncToLists();
                     moved = true;
-                } else if (o.equals(bo)) {
+                }
+                if (o.equals(bo)) {
                     List<String> additional = Arrays.asList("D", "R", "D'", "R'", "D'", "B'", "D", "B");
                     moves.addAll(additional);
                     cube.makeMovesFromList(additional);
+                    cube.syncToLists();
                     moved = true;
                 }
             }
@@ -319,6 +331,7 @@ public class CubeSolver {
             if (!moved) {
                 moves.add("D");
                 cube.moveD();
+                cube.syncToLists();
             }
         }
 
@@ -349,7 +362,7 @@ public class CubeSolver {
         Set<Color> br = Set.of(Color.B, Color.R);
         Set<Color> bo = Set.of(Color.B, Color.O);
         Set<Color> gr = Set.of(Color.G, Color.R);
-        Set<Color> go = Set.of(Color.B, Color.O);
+        Set<Color> go = Set.of(Color.G, Color.O);
 
         Set<Color> r = Set.of(cube.getR()[2][1], cube.getY()[0][1]);
         Set<Color> b = Set.of(cube.getB()[2][1], cube.getY()[1][2]);
